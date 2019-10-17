@@ -1,3 +1,5 @@
-stencil: stencil.c
-	gcc -Ofast -std=c99 -Wall $^ -o $@
+stencil:
+	make -f makefile.stencil
 
+profile:
+	make -f makefile.profile

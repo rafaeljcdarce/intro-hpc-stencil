@@ -5,9 +5,9 @@
 #SBATCH --partition veryshort
 #SBATCH --reservation COMS30005
 #SBATCH --account COMS30005
-#SBATCH --job-name stencil
+#SBATCH --job-name profile
 #SBATCH --time 00:15:00
-#SBATCH --output stencil.out
+#SBATCH --output profile.out
 #SBATCH --exclusive
 
 # Print some information about the job
@@ -24,6 +24,7 @@ echo
 export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so
 
 # Run the executable
-srun ./stencil 1024 1024 100
-srun ./stencil 4096 4096 100
-srun ./stencil 8000 8000 100
+srun perf stat -e cycles,instructions,cache-references,cache-misses -- ./profile 8000 8000 100
+srun ./profile.gprof 8000 8000 100
+srun gprof -l profile.gprof gmon.out
+
