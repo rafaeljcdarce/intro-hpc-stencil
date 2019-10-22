@@ -27,4 +27,3 @@ export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so
 srun perf stat -e cycles,instructions,cache-references,cache-misses -- ./profile 8000 8000 100
 srun ./profile.gprof 8000 8000 100
 srun gprof -l profile.gprof gmon.out
-

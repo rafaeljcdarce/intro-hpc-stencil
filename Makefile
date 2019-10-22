@@ -3,3 +3,4 @@ stencil:
 
 profile:
 	make -f makefile.profile
+

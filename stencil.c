@@ -57,10 +57,10 @@ int main(int argc, char* argv[])
 }
 
 void stencil(const int nx, const int ny, const int width, const int height,
-             float* image, float* tmp_image)
+             float* restrict image, float* restrict tmp_image)
 {
-  for (int i = 1; i < nx + 1; ++i) {
-    for (int j = 1; j < ny + 1; ++j) {
+  for (int i = 1; i < ny + 1; ++i) {
+    for (int j = 1; j < nx + 1; ++j) {
       tmp_image[j + i * height] = 0.6f*image[j+i*height] + 0.1f*(image[j+(i-1)*height] + image[j+(i+1)*height] + image[j-1+i*height] + image[j+1+i*height]);
     }
   }
@@ -73,8 +73,8 @@ void init_image(const int nx, const int ny, const int width, const int height,
   // Zero everything
   for (int j = 0; j < ny + 2; ++j) {
     for (int i = 0; i < nx + 2; ++i) {
-      image[j + i * height] = 0.0f;
-      tmp_image[j + i * height] = 0.0f;
+      image[j + i * height] = 0.0;
+      tmp_image[j + i * height] = 0.0;
     }
   }
 
@@ -87,7 +87,7 @@ void init_image(const int nx, const int ny, const int width, const int height,
         const int ilim = (ib + tile_size > nx) ? nx : ib + tile_size;
         for (int j = jb + 1; j < jlim + 1; ++j) {
           for (int i = ib + 1; i < ilim + 1; ++i) {
-            image[j + i * height] = 100.0f;
+            image[j + i * height] = 100.0;
           }
         }
       }
@@ -112,7 +112,7 @@ void output_image(const char* file_name, const int nx, const int ny,
   // Calculate maximum value of image
   // This is used to rescale the values
   // to a range of 0-255 for output
-  float maximum = 0.0;
+  float maximum = 0.0f;
   for (int j = 1; j < ny + 1; ++j) {
     for (int i = 1; i < nx + 1; ++i) {
       if (image[j + i * height] > maximum) maximum = image[j + i * height];
@@ -122,7 +122,7 @@ void output_image(const char* file_name, const int nx, const int ny,
   // Output image, converting to numbers 0-255
   for (int j = 1; j < ny + 1; ++j) {
     for (int i = 1; i < nx + 1; ++i) {
-      fputc((char)(255.0f * image[j + i * height] / maximum), fp);
+      fputc((char)(255.0 * image[j + i * height] / maximum), fp);
     }
   }
 
